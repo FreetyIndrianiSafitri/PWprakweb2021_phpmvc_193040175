@@ -1,51 +1,61 @@
 <?php
 
-/* Freety Indriani Safiri - 193040175 (MVC) */
+/* Freety Indriani Safitri - 193040175 (MVC) */
 
-class App
-{
-  protected $controller = 'Home';
-  protected $method = 'index';
-  protected $params = [];
+class App{
 
-  public function __construct()
-  {
-    $url = $this->parseURL();
+    protected $controller = 'Home';
+    protected $method = 'index';
+    protected $params = [];
 
-    if (file_exists('../app/controllers/' . $url[0] . '.php')) {
-      $this->controller = $url[0];
-      unset($url[0]);
+    public function __construct()
+    {
+        $url = $this->parseURL();
+
+         if($url == NULL)
+               {
+            $url = [$this->controller];
+        }
+
+        // controller
+        if( file_exists('../app/controllers/' . $url[0] . '.php') )
+        {
+            $this->controller = $url[0];
+            unset($url[0]);
+        }
+
+        require_once '../app/controllers/' . $this->controller . '.php';
+        $this->controller = new $this->controller;
+
+        // method
+        if( isset($url[1]) )
+        {
+            if( method_exists($this->controller, $url[1]) )
+            {
+                $this->method = $url[1];
+                unset($url[1]);
+            }
+        }
+
+        // params
+        if( !empty($url) )
+        {
+            $this->params = array_values($url);
+        }
+
+        // jalankan controller dan method, serta kirimkan params jika ada
+        call_user_func_array([$this->controller, $this->method], $this->params);
+
     }
 
-    //controller
-    require_once '../app/controllers/' . $this->controller . '.php';
-    $this->controller = new $this->controller;
-
-    //method
-    if (isset($url[1])) {
-      if (method_exists($this->controller, $url[1])) {
-        $this->method = $url[1];
-        unset($url[1]);
-      }
+    public function parseURL()
+    {
+        if( isset($_GET['url']) ){
+            $url = rtrim($_GET['url'], '/');
+            $url = filter_var($url, FILTER_SANITIZE_URL);
+            $url = explode('/', $url);
+            return $url;
+        }
     }
 
-    //params
-    if ( !empty($url) ) {
-      $this->params = array_values($url);
-    }
-
-    // jalankan controller dan methode serta kirimkan params jika ada
-
-    call_user_func_array([$this->controller, $this->method], $this->params);
-  }
-
-  public function parseURL()
-  {
-    if (isset($_GET['url'])) {
-      $url = rtrim($_GET['url'], '/');
-      $url = filter_var($url, FILTER_SANITIZE_URL);
-      $url = explode('/', $url);
-      return $url;
-    }
-  }
 }
