@@ -1,6 +1,6 @@
 <?php
 
-/* Freety Indriani Safitri - 193040175 (MVC) */
+/* Freety Indriani Safitri - 193040175 */
 
 class Controller{
     
@@ -9,4 +9,9 @@ class Controller{
         require_once '../app/views/' . $view . '.php';
     }
 
+    public function model($model)
+    {
+        require_once '../app/models/' . $model . '.php';
+        return new $model;
+    }
 }

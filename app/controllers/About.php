@@ -1,6 +1,6 @@
 <?php
 
-/* Freety Indriani Safitri - 193040175 (MVC) */
+/* Freety Indriani Safitri - 193040175 */
 
 class About extends Controller {
 
