@@ -12,7 +12,7 @@ class App{
     {
         $url = $this->parseURL();
 
-         if($url == NULL)
+        if($url == NULL)
                {
             $url = [$this->controller];
         }
